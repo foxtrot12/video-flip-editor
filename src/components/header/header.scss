@@ -1,0 +1,33 @@
+.header {
+    padding: 18px 0px;
+    .headerTitle {
+      font-weight: 700;
+      font-size: 16px;
+      color: #ffffff;
+      flex-grow: 1;
+      padding-left: 18px;
+    }
+    .btnGrp {
+      flex-grow: 1;
+      .btnGrpInner {
+        height: 36px;
+        background-color: #45474e;
+        border: solid 1px transparent;
+        border-radius: 8px;
+        padding: 2px;
+
+        .sessionBtn {
+          background: transparent;
+          border: solid 1px transparent;
+          border-radius: 8px;
+          font-weight: 400;
+          color: #ffffff;
+          font-size: 12px;
+          height: 80%;
+        }
+        .nonSelectedBtn {
+          background-color: #37393f;
+        }
+      }
+    }
+  }

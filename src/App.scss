@@ -1,8 +1,70 @@
-.videoFlipEditor{
-  $appBgClr : #37393F;
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@100;200;300;400;500;700&display=swap");
+
+.videoFlipEditor {
+  $appBgClr: #37393f;
 
   background-color: $appBgClr;
+  font-family: "DM Sans", sans-serif;
+
   height: 100vh;
   width: 100vw;
   display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  .absolute {
+    position: absolute;
+  }
+
+  .relative {
+    position: relative;
+  }
+
+  .flex {
+    display: flex;
+
+    &.col {
+      flex-direction: column;
+    }
+
+    &.grow {
+      flex-grow: 1;
+    }
+
+    &.verHorCenter {
+      justify-content: center;
+      align-items: center;
+    }
+
+    &.justifySpaceBw {
+      justify-content: space-between;
+    }
+
+    &.alignItemsCenter {
+      align-items: center;
+    }
+  }
+
+  .hFull {
+    height: 100%;
+  }
+
+  .wFull {
+    width: 100%;
+  }
+
+  .cursorPtr {
+    cursor: pointer;
+  }
+
+  .ddLabel {
+    gap: 0.5rem;
+    .ddLabelStatic {
+      color: white;
+    }
+    .ddLabelVal {
+      color: #9ba6ab;
+    }
+  }
+
 }

@@ -1,0 +1,37 @@
+.cropperVid {
+  gap: 1rem;
+  padding: 0.5rem;
+  width: 40%;
+
+  .videoEl {
+    border-radius: 0.375rem;
+  }
+
+  .vidControlPanel {
+    height: 5%;
+    padding: 0;
+    margin: 0;
+
+    .timeDisplay {
+      gap: 3px;
+      .currentTime {
+        color: #ffffff;
+      }
+      .timeDiv {
+        border-left: 2px solid #ffffff80;
+      }
+      .totalTime {
+        color: #ffffff80;
+      }
+    }
+
+    .playbackCont{
+      width: 30%;
+      height: 80%;
+    }
+
+    .volumeSlider{
+      height: 40%;
+    }
+  }
+}
