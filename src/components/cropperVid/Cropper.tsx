@@ -1,10 +1,12 @@
 import { useRef, useState, useEffect, memo, RefObject, useMemo } from "react";
 import { fromEvent, Subscription } from "rxjs";
+import { CropFrameData } from "../../App";
 
 interface CropperParams {
   aspectRatio: number;
   videoRef: RefObject<HTMLVideoElement>;
   previewCanvasRef: RefObject<HTMLCanvasElement>;
+  cropDataArrRef: RefObject<CropFrameData[]>;
 }
 
 function Cropper(props: CropperParams) {
@@ -56,6 +58,24 @@ function Cropper(props: CropperParams) {
     }
   };
 
+  const setOverlaySizeAndPosition = () => {
+    if (!props.videoRef.current) return;
+
+    const videoRect = props.videoRef.current.getBoundingClientRect();
+
+    setOverlayPosition({
+      absX: videoRect.left,
+      absY: videoRect.top + 2, //to count for padding
+      relX: 0,
+      relY: 0,
+    });
+
+    setOverlaySize({
+      height: videoRect.height,
+      width: videoRect.height * props.aspectRatio,
+    });
+  };
+
   useEffect(() => {
     updateCanvas();
     const interval = setInterval(() => {
@@ -65,27 +85,14 @@ function Cropper(props: CropperParams) {
   }, [props.videoRef, overlayPosition, overlaySize]);
 
   useEffect(() => {
-    if (!props.previewCanvasRef.current || !props.videoRef.current) return;
+    if (!props.videoRef.current) return;
+    setOverlaySizeAndPosition();
 
     const videoLoadedSubs = fromEvent(
       props.videoRef.current,
       "loadeddata"
     ).subscribe(() => {
-      if (!props.previewCanvasRef.current || !props.videoRef.current) return;
-
-      const videoRect = props.videoRef.current.getBoundingClientRect();
-
-      setOverlayPosition({
-        absX: videoRect.left,
-        absY: videoRect.top + 2, //to count for padding
-        relX: 0,
-        relY: 0,
-      });
-
-      setOverlaySize({
-        height: videoRect.height,
-        width: videoRect.height * props.aspectRatio,
-      });
+      setOverlaySizeAndPosition();
     });
 
     return () => {
@@ -121,6 +128,19 @@ function Cropper(props: CropperParams) {
 
   const handlePointerUp = () => {
     isDragging.current = false;
+    const newCropFrame: CropFrameData = {
+      timeStamp: props.videoRef.current?.currentTime ?? 0,
+      coordinates: [
+        overlayPosition.relX,
+        overlayPosition.relY,
+        overlaySize.width,
+        overlaySize.height,
+      ],
+      volume: props.videoRef.current?.volume ?? 0,
+      playbackRate: props.videoRef.current?.playbackRate ?? 0,
+    };
+    props.cropDataArrRef.current?.push(newCropFrame);
+
   };
 
   return (
@@ -132,14 +152,16 @@ function Cropper(props: CropperParams) {
         left: overlayPosition.absX,
         width: overlaySize.width,
         height: overlaySize.height,
-        background: "rgba(255, 255, 255, 0.2)",
-        cursor: "grab",
+
       }}
+      className="cropper"
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp} // In case the pointer leaves the overlay while dragging
-    ></div>
+    >
+      {[0,1,2,3,4,5,6,7,8].map((x)=><div className="cropperGrid" key='x'></div>)}
+    </div>
   );
 }
 

@@ -67,4 +67,31 @@
     }
   }
 
+  .prpBtnGrp{
+    width: 40%;
+  }
+
+  .prpBtn{
+    background: #7C36D6;
+    border: solid transparent;
+    border-radius: 4px;
+    color: #ffffff;
+    padding: 5px;
+    &:disabled{
+      opacity: 50%;
+    }
+  }
+
+  .cancelBtn{
+    background: #45474E;
+    border: solid transparent;
+    border-radius: 4px;
+    color: #ffffff;
+    margin-right: 20px;
+    padding: 5px;
+  }
+
+  .btnGrp{
+    padding: 10px 0px;
+  }
 }

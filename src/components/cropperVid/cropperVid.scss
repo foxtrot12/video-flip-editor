@@ -24,13 +24,23 @@
       }
     }
 
-    .playbackCont{
-      width: 30%;
+    .playbackCont {
       height: 30%;
+      justify-content: space-between;
     }
 
-    .volumeSlider{
+    .volumeSlider {
       height: 40%;
+    }
+  }
+
+  .cropper {
+    background: transparent;
+    cursor: grab;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    .cropperGrid {
+      border: dashed #ffffff 1px;
     }
   }
 }

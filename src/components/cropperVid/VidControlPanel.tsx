@@ -12,16 +12,12 @@ import { PauseSvg, PlaySvg, SoundSvg } from "../../common/svgs";
 import Dropdown from "../../common/dropdown/Dropdown";
 import Slider from "../../common/slider/Slider";
 
-interface ProgressBarParams {
+interface VidControlParams {
   videoRef: RefObject<HTMLVideoElement>;
   classes: string;
+  setAspectRatio: React.Dispatch<React.SetStateAction<number>>;
+  aspectRatio: number;
 }
-
-interface SeekerParams {
-  progress: number;
-  handleSeek: ChangeEventHandler<HTMLInputElement> | undefined;
-}
-
 function formatTime(timeInSeconds: number): string {
   const hours = Math.floor(timeInSeconds / 3600);
   const minutes = Math.floor((timeInSeconds % 3600) / 60);
@@ -31,7 +27,7 @@ function formatTime(timeInSeconds: number): string {
     .toString()
     .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 }
-function VidControlPanel(props: ProgressBarParams) {
+function VidControlPanel(props: VidControlParams) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(1);
@@ -43,6 +39,15 @@ function VidControlPanel(props: ProgressBarParams) {
     { value: 1, label: "1x" },
     { value: 1.5, label: "1.5x" },
     { value: 2, label: "2x" },
+  ];
+
+  const aspectRatios = [
+    { value: 9 / 16, label: "9:16" },
+    { value: 9 / 18, label: "9:18" },
+    { value: 4 / 3, label: "4:3" },
+    { value: 3 / 4, label: "3:4" },
+    { value: 1 / 1, label: "1:1" },
+    { value: 4 / 5, label: "4:5" },
   ];
 
   const currentTime = useMemo(() => {
@@ -67,7 +72,7 @@ function VidControlPanel(props: ProgressBarParams) {
     } else {
       props.videoRef.current.play();
     }
-  }, [props.videoRef,isPlaying]);
+  }, [props.videoRef, isPlaying]);
 
   const handleSeek = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,6 +97,15 @@ function VidControlPanel(props: ProgressBarParams) {
       }
     },
     [props.videoRef]
+  );
+
+  const handleAspectRatioChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      if (!props.videoRef.current) return;
+      const newRatio = parseFloat(event.target.value);
+      props.setAspectRatio(newRatio);
+    },
+    [props.setAspectRatio]
   );
 
   const handleVolumeChange = useCallback(
@@ -161,19 +175,19 @@ function VidControlPanel(props: ProgressBarParams) {
             <p className="timeDiv"></p>
             <p className="totalTime">{totalTime}</p>
           </div>
-            <Slider
-              step={0.01}
-              min={0}
-              max={1}
-              handleSlide={handleVolumeChange}
-              value={volume}
-              classes="volumeSlider"
-              buttonIcon={<SoundSvg className={'hFull'} />}
-            />
+          <Slider
+            step={0.01}
+            min={0}
+            max={1}
+            handleSlide={handleVolumeChange}
+            value={volume}
+            classes="volumeSlider"
+            buttonIcon={<SoundSvg className={"hFull"} />}
+          />
         </div>
       </div>
 
-      <div className="flex playbackCont">
+      <div className="flex  wFull">
         <Dropdown
           options={playbackSpeeds}
           value={playbackRate}
@@ -185,6 +199,21 @@ function VidControlPanel(props: ProgressBarParams) {
               <p className="ddLabelVal">{`${playbackRate}x`}</p>
             </div>
           }
+        />
+        <Dropdown
+          options={aspectRatios}
+          labelInner={
+            <div className="flex ddLabel">
+              <p className="ddLabelStatic">Cropper Aspect Ratio</p>
+              <p className="ddLabelVal">{`${
+                aspectRatios.find((val) => val.value === props.aspectRatio)
+                  ?.label
+              }`}</p>
+            </div>
+          }
+          value={props.aspectRatio}
+          onChange={handleAspectRatioChange}
+          id={"aspectRatioDD"}
         />
       </div>
     </div>
