@@ -52,7 +52,7 @@ function BottomBar(props: BottomBarParams) {
           Generate Preview
         </button>
         <button
-          disabled={!props.cropDataArrRef.current}
+          disabled={!props.cropDataArrRef.current || props.cropDataArrRef.current.length === 0}
           onClick={() => downloadJSON(props.cropDataArrRef.current,'coordinates')}
           className="cursorPtr flex prpBtn"
         >
